@@ -137,24 +137,29 @@ class SelectedEvent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: eventState.selectedEventList.length,
-        itemBuilder: (context, index) {
-          final event = eventState.selectedEventList[index];
-          return Card(
-            child: ListTile(
-              title: Text(event.title),
-              subtitle: event.description == null ? null : Text(event.description!),
-              trailing: IconButton(
-                onPressed: () async {
-                  await eventProvider.deleteEvent(event: event);
-                },
-                icon: const Icon(Icons.delete),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxHeight: 100),
+      child: CarouselView(
+        itemExtent: 320,
+        shrinkExtent: 200,
+        children: List<Widget>.generate(
+          eventState.selectedEventList.length,
+          (int index) {
+            final event = eventState.selectedEventList[index];
+            return Card(
+              child: ListTile(
+                title: Text(event.title),
+                subtitle: event.description == null ? null : Text(event.description!),
+                trailing: IconButton(
+                  onPressed: () async {
+                    await eventProvider.deleteEvent(event: event);
+                  },
+                  icon: const Icon(Icons.delete),
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
